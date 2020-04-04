@@ -33,9 +33,11 @@ const createDataCron = <T>(customInterval: number) => (
 };
 
 const test = marbles((m) => {
-  const source$ = m.cold("--a|   ");
-  const ms = m.time("     ------|");
-  const expected = "      --a|   ";
+  const source$ = m.cold("     --(a|)   ");
+  const ms = m.time("          -------|");
+  const expected = "           --(a|)   ";
+  const testDuration = m.time("--|");
+  // const testDuration = ms;
 
   const cron = createDataCron(ms)(source$);
 
@@ -45,8 +47,9 @@ const test = marbles((m) => {
 
   m.expect(actual$).toBeObservable(expected);
 
-  cron.connect();
+  const subscription = cron.connect();
+
+  m.scheduler.schedule(() => subscription.unsubscribe(), testDuration);
 });
 
-// This hangs forever…
 test();
