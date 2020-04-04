@@ -41,9 +41,7 @@ const test = marbles((m) => {
 
   const cron = createDataCron(ms)(source$);
 
-  // const actual$ = cron.latestData$;
-  // Workaround suggested by Nicholas: https://twitter.com/ncjamieson/status/1246206430161461248
-  const actual$ = m.cold("x|").pipe(mergeMapTo(cron.latestData$));
+  const actual$ = cron.latestData$;
 
   m.expect(actual$).toBeObservable(expected);
 
